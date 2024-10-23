@@ -12,33 +12,33 @@ public class Main {
     public static void main(String[] args) throws UnknownHostException, IOException {
 
         Scanner scan = new Scanner(System.in);
-        String frase, operazione;
-
+        String frase, numero;
+        int n = 0;
         System.out.println("Client avviato!");
-        Socket s = new Socket("172.21.228.91", 3000);
+        Socket s = new Socket("localhost", 3000);
         System.out.println("Client connesso!");
 
         BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         DataOutputStream out = new DataOutputStream(s.getOutputStream());
 
         do {
-            System.out.println("1 maiuscolo, 2 minuscolo, 3 inverti, 4 conta caratteri:");
-            System.out.println("Scegli operazione: ");
-            operazione = scan.nextLine();
+            System.out.println("Inserisci un numero");
+            numero = scan.nextLine();
 
-            if (operazione.equals("0")) {
+            if (numero.equals("exit")) {
                 System.out.println("Il client sta terminando");
-                out.writeBytes("!" + "\n");
+                out.writeBytes("EXIT" + "\n");
                 break;
             }
 
-            System.out.println("inserisci la frase: ");
-            frase = scan.nextLine();
-
-            out.writeBytes(operazione + "\n");
-            out.writeBytes(frase + "\n");
-            out.flush();
+            n = Integer.parseInt(numero);
+            if (n > 100 || n < 1) {
+                System.out.println("errore nel numero inviato");
+                break;
+            }
+            out.writeBytes(n + "\n");
             frase = in.readLine();
+
             System.out.println("Il server ha risposto con " + frase);
 
         } while (true);
